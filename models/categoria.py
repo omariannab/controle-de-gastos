@@ -1,7 +1,8 @@
 class Categoria:
-    def __init__(self, nome, descricao):
+    def __init__(self, nome, descricao, id=None):
         self.nome = nome
         self.descricao = descricao
+        self.id = id
 
     def mostrar_dados(self):
         print(f"Categoria: {self.nome}, Descrição: {self.descricao}")

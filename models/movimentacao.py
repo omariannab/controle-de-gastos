@@ -1,9 +1,10 @@
 class Movimentacao:
-    def __init__(self, descricao, valor, data, categoria):
+    def __init__(self, descricao, valor, data, categoria, id=None):
         self.descricao = descricao
         self.valor = valor
         self.data = data
         self.categoria = categoria
+        self.id = id
 
     def mostrar_dados(self):
         print(f"Descrição: {self.descricao}, Valor: {self.valor}, Data: {self.data}, Categoria: {self.categoria.nome}")
