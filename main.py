@@ -32,11 +32,13 @@ def menu_conta():
             if esc == "1":
                 saldo_inicial = float(input("Insira o saldo inicial da conta: "))
                 conta.definir_saldo_inicial(saldo_inicial)
+                sistema.banco.atualizar_saldo_inicial(sistema.usuario_logado.id, saldo_inicial)
             elif esc == "2":
                 nome_categoria = input("Insira o nome da categoria: ")
                 descricao = input("Descrição: ")
                 categoria = Categoria(nome_categoria, descricao)
                 conta.adicionar_categoria(categoria)
+                categoria.id = sistema.banco.salvar_categoria(nome_categoria, descricao, sistema.usuario_logado.id)
             elif esc == "3":
                 for i, c in enumerate(conta.categorias):
                     print(f"{i + 1}.", end=" ")
@@ -51,6 +53,7 @@ def menu_conta():
                             nova_descricao = input("Nova descrição da categoria: ")
                             categoria.alterar_nome(novo_nome)
                             categoria.alterar_descricao(nova_descricao)
+                            sistema.banco.atualizar_categoria(novo_nome, nova_descricao, categoria.id)
             elif esc == "5":
                 nome_receita = input("Insira o nome da receita:")
                 valor = float(input("Insira o valor da receita: "))
@@ -62,6 +65,7 @@ def menu_conta():
                 categoria = conta.categorias[categoria_index]
                 receita = Receita(nome_receita, valor, data, categoria)
                 conta.adicionar_movimentacao(receita)
+                receita.id = sistema.banco.salvar_movimentacao("receita", nome_receita, valor, data, categoria.id, sistema.usuario_logado.id)
             elif esc == "6":
                 nome_despesa = input("Insira o nome da despesa: ")
                 valor = float(input("Insira o valor da despesa: "))
@@ -73,6 +77,7 @@ def menu_conta():
                 categoria = conta.categorias[categoria_index]
                 despesa = Despesa(nome_despesa, valor, data, categoria)
                 conta.adicionar_movimentacao(despesa)
+                despesa.id = sistema.banco.salvar_movimentacao("despesa", nome_despesa, valor, data, categoria.id, sistema.usuario_logado.id)
             elif esc == "7":    
                 conta.listar_movimentacoes()
             elif esc == "8":
@@ -87,9 +92,13 @@ def menu_conta():
                             categoria_index = int(input("Escolha a nova categoria (número): ")) - 1
                             nova_categoria = conta.categorias[categoria_index]
                             conta.editar_movimentacao(index, nova_descricao, novo_valor, nova_data, nova_categoria)
+                            movimentacao = conta.movimentacoes[index - 1]
+                            sistema.banco.atualizar_movimentacao(nova_descricao, novo_valor, nova_data, nova_categoria.id, movimentacao.id)
             elif esc == "9":
                 conta.listar_movimentacoes()
                 index = int(input("Insira o índice da movimentação que deseja excluir: ")) 
+                movimentacao = conta.movimentacoes[index-1]
+                sistema.banco.excluir_movimentacao(movimentacao.id)
                 conta.excluir_movimentacao(index)
             elif esc == "10":
                 resumo = ResumoFinanceiro()
